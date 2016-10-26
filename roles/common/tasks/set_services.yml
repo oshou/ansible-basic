@@ -1,0 +1,9 @@
+---
+- name: service enabled
+  service: name={{item}} state=started enabled=yes
+  with_items: "{{common_enable_services}}"
+
+- name: service disabled
+  service: name={{item}} state=stopped enabled=no
+  ignore_errors: True
+  with_items: "{{common_disable_services}}"

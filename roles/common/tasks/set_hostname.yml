@@ -1,0 +1,3 @@
+---
+- name: change hostname
+  hostname: name={{common_hostname}}

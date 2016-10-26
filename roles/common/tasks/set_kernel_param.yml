@@ -1,0 +1,24 @@
+---
+- name: set kernel params( for SYN Flood, Smurf, IPaddress Spoofing, Logfull, disallowing source routing)
+  ignore_errors: True
+  sysctl: >
+    name="{{item.name}}"
+    value="{{item.value}}"
+    sysctl_set=yes
+  with_items:
+    # For SYN Flood Attack
+    - {name: 'net.ipv4.tcp_syncookies', value: 1}
+    # For SYN Smurf Attack
+    - {name: 'net.ipv4.icmp_echo_ignore_broadcasts', value: 1}
+    # For IPaddress Spoofing
+    - {name: 'net.ipv4.conf.default.rp_filter', value: 1}
+    - {name: 'net.ipv4.conf.all.rp_filter', value: 1}
+    # For Logfull Attack (disallow logging for icmp error messages)
+    - {name: 'net.ipv4.icmp_ignore_bogus_error_responses', value: 1}
+    # For nmap
+    - {name: 'net.ipv4.tcp_timestamps', value: 0}
+    # For disallow source routing
+    - {name: 'net.ipv4.conf.default.accept_source_route', value: 0}
+    - {name: 'net.ipv4.conf.all.accept_source_route', value: 0}
+    - {name: 'net.ipv6.conf.default.accept_source_route', value: 0}
+    - {name: 'net.ipv6.conf.all.accept_source_route', value: 0}

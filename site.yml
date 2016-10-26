@@ -1,0 +1,24 @@
+---
+- name: common
+  # 対象hosts
+  hosts: servers
+  # sudo実行の有無
+  become: yes
+  # 参照設定値(group_vars->host_varsの順に記述)
+  vars_files:
+    - group_vars/pretask_ansible.yml
+    - group_vars/common.yml
+    # - group_vars/dns_bind.yml
+    # - group_vars/web_apache.yml
+    # - group_vars/web_nginx.yml
+    # - group_vars/app_phpfpm.yml
+    # - group_vars/db_mysql.yml
+    - host_vars/{{ansible_hostname}}.yml
+  # 実行タスク等
+  roles:
+    - common
+    # - dns_bind
+    # - web_apache
+    # - web_nginx
+    # - app_phpfpm
+    # - db_mysql

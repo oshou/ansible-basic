@@ -1,0 +1,74 @@
+# // 使用ユーザー
+user                  {{nginx_user}};
+# // PIDファイルのパス
+pid                   {{nginx_pid_file_path}};
+
+# // workerプロセス数(auto指定ならCPUコア数と同数に自動調整)
+worker_processes      {{nginx_worker_processes}};
+# // workerプロセスがopen出来るファイルディスクリプタの最大数(worker_connectionsより優先される)
+worker_rlimit_nofile  {{nginx_worker_rlimit_nofile}};
+
+events{
+  # // workerプロセス毎の最大同時接続数
+  worker_connections  {{nginx_worker_connections}};
+  # // 複数クライアントからのアクセスを一度に受け付ける
+  multi_accept        {{nginx_multi_accept}};
+  # // I/O多重化システムコールの選択(select/kqueue/poll/epoll<--推奨)
+  use                 {{nginx_multiplexing_use}};
+}
+
+http {
+  # // MIMEファイルパス
+  include             {{nginx_mime_file_path}};
+  # // MIMEファイルに情報が無い場合のデフォルトMIME TYPE
+  default_type        application/octet-stream;
+
+  # // ロギング(access_log)
+  access_log          {{nginx_access_log}};
+  # // ロギング(error_log)
+  error_log           {{nginx_error_log}};
+  # // ログフォーマット
+  log_format          main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '$http_user_agent'
+                      '$http_x_forwarded_for';
+  # // ログが無い場合のエラー出力の有効化
+  log_not_found       {{nginx_log_not_found}};
+
+  # // クライアントとのkeepalive接続のタイムアウト時間
+  keepalive_timeout   {{nginx_keepalive_timeout}};
+  # // 一度開いたファイル情報をキャッシュ(max=最大fd数、inactive=キャッシュ有効期間)
+  open_file_cache     max={{nginx_open_file_cache.max}} inactive={{nginx_open_file_cache.inactive}};
+  # // sendfileシステムコール有効化(fdから直接クライアントに送信するため送信効率が良くなる)
+  sendfile            {{nginx_sendfile}};
+  # // TCP_NOPUSHオプションの有効化(TCPパケットを出来るだけまとめて送信する)
+  # // *tcp_nodelayと競合しないので両方onを推奨
+  tcp_nopush          {{nginx_tcp_nopush}};
+  # // TCP_NODELAYオプションの有効化(TCPパケットを出来るだけ即座に送信する)
+  tcp_nodelay         {{nginx_tcp_nodelay}};
+
+  # // HTTPレスポンスヘッダとエラーページのフッタにNginxバージョン情報を表示するか
+  # // *推奨:off
+  server_tokens       {{nginx_server_tokens}};
+
+  # // コンテンツのgzip圧縮の有効化
+  gzip                {{nginx_gzip}};
+  # // gzip圧縮を行うContent-Typeの追加(text/htmlは未記入でもデフォルトで圧縮対象)
+  gzip_types          text/plain
+                      text/css
+                      text/javascript
+                      text/xml
+                      application/javascript
+                      application/x-javascript
+                      application/json
+                      application/xml
+                      application/xml+rss;
+  # // gzip圧縮禁止
+  gzip_disable        {{nginx_gzip_disable}};
+  # // gzip圧縮対象とする最小サイズ。指定サイズ以下は圧縮されない
+  gzip_min_length     {{nginx_gzip_min_length}};
+
+  # // 他設定は以下confファイルを参照
+  # // デフォルトのサーバー設定はconf.d/default.confを参照
+  include         ./conf.d/*.conf;
+}

@@ -1,0 +1,7 @@
+---
+- name: set local timezone
+  file: >
+    src=/usr/share/zoneinfo/{{common_zoneinfo}}
+    dest=/etc/localtime
+    state=link
+    force=yes

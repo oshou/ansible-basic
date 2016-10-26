@@ -1,0 +1,31 @@
+---
+- include: set_user.yml
+- include: set_ssh.yml
+- include: set_locale.yml
+- include: set_timezone.yml
+- include: set_ntp.yml
+- include: set_bootloader.yml
+- include: set_mail.yml
+- include: set_kernel_param.yml
+- include: set_hostname.yml
+- include: set_selinux.yml
+- include: set_repository.yml
+- include: install_common_packages.yml
+- include: set_services.yml
+- include: set_iptables.yml
+
+# Set network
+# // vi /etc/sysconfig/network
+
+# Set network interface
+# // vi /etc/sysconfig/network-scripts/ifcfg-xx
+
+# Set local hosts
+# // vi /etc/hosts
+
+# Set resolver
+# // vi /etc/resolv.conf
+
+# Set xinetd
+
+# Set TCPWrapper

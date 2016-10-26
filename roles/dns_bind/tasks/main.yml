@@ -1,0 +1,27 @@
+---
+# Install bind
+- name: install bind(latest)
+  yum: name={{item}} state=latest
+  with_items: "{{bind_packages}}"
+
+# Setting named root directory
+- name: set named root directory
+  lineinfile: >
+    dest=/etc/sysconfig/named
+    regexp="ROOTDIR="
+    line="ROOTDIR=/var/named/chroot"
+
+- name: set named.conf
+  notify: restart_bind
+  template:
+    src: named.conf.j2
+    dest: "/var/named/chroot/etc/named.conf"
+
+- name: set zone setting
+  notify: restart_bind
+  template:
+    src: example.jp.zone.j2
+    dest: "/var/named/chroot/var/named/example.jp.zone"
+
+- name: service start & enabled
+  service: name=named state=started enabled=yes

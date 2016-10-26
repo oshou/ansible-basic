@@ -1,0 +1,6 @@
+# Setting iptables
+- name: set iptables
+  notify: restart_iptables
+  template: >
+    src=iptables.j2
+    dest=/etc/sysconfig/iptables

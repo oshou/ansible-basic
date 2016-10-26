@@ -1,0 +1,27 @@
+---
+- name: enable nginx repo
+  template: >
+    src=nginx.repo.j2
+    dest=/etc/yum.repos.d/nginx.repo
+    owner=root
+    group=root
+    mode=0644
+
+- name: install nginx
+  yum: name=nginx state=installed enablerepo=nginx
+
+- name: set nginx.conf
+  template: >
+    src=nginx.conf.j2
+    dest="{{nginx_config_file_path}}"
+    owner=root
+    group=root
+    mode=0644
+  notify: restart_nginx
+
+- name: service httpd stop & diabled
+  service: name=httpd state=stopped enabled=no
+  ignore_errors: True
+
+- name: service start & enabled
+  service: name=mysqld state=started enabled=yes

@@ -1,0 +1,10 @@
+---
+- name: set ntpd
+  lineinfile: >
+    dest=/etc/ntp.conf
+    state=present
+    regexp='{{item.regexp}}'
+    line='{{item.line}}'
+  with_items:
+    - {regexp: '^#? ?server ', line: 'server {{common_ntpserver}} iburst'}
+  notify: restart_ntpd

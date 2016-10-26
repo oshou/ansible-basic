@@ -1,0 +1,28 @@
+---
+- name: install Apache
+  yum: name=httpd state=installed
+
+- name: set httpd.conf
+  lineinfile: >
+    dest=/etc/httpd/conf/httpd.conf
+    state=present
+    regexp={{item.regexp}}
+    line={{item.line}}
+  with_items:
+    - {regexp: '^#? ?Listen ',line: 'Listen {{apache_listen_ip}}:{{apache_listen_port}}'}
+    - {regexp: '^#? ?ServerRoot ',line: 'ServerRoot {{apache_server_root}}'}
+    - {regexp: '^#? ?DocumentRoot ',line: 'DocumentRoot {{apache_document_root}}'}
+    - {regexp: '^#? ?User ',line: 'User {{apache_user}}'}
+    - {regexp: '^#? ?Group ',line: 'Group {{apache_group}}'}
+    - {regexp: '^#? ?Timeout ',line: 'Timeout {{apache_timeout}}'}
+    - {regexp: '^#? ?KeepAlive ',line: 'KeepAlive {{apache_keepalive}}'}
+    - {regexp: '^#? ?KeepAliveTimeout ',line: 'KeepAliveTimeout {{apache_keepalive_timeout}}'}
+    - {regexp: '^#? ?MaxKeepAliveRequests ',line: 'MaxKeepAliveRequests {{apache_max_keepalive_requests}}'}
+    - {regexp: '^#? ?ServerAdmin ',line: 'ServerAdmin {{apache_server_admin}}'}
+    - {regexp: '^#? ?ServerName ',line: 'ServerName {{apache_server_name}}'}
+    - {regexp: '^#? ?ServerTokens ',line: 'ServerTokens Prod'}
+    - {regexp: '^#? ?ServerSignature ',line: 'ServerSignature Off'}
+  notify: restart_apache
+
+- name: service start & enabled
+  service: name=httpd state=started enabled=yes

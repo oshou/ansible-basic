@@ -1,0 +1,9 @@
+---
+- name: restart_ntpd
+  service: name=ntpd state=restarted
+
+- name: restart_sshd
+  service: name=sshd state=restarted
+
+- name: restart_iptables
+  service: name=iptables state=restarted

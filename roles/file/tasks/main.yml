@@ -1,0 +1,4 @@
+---
+- name: install samba packages
+  yum: name=samba state=latest
+

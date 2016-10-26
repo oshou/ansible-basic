@@ -1,0 +1,13 @@
+---
+- name: install common packages
+  yum: >
+    name={{item}}
+    state=installed
+  with_items: "{{common_packages}}"
+
+- name: update all packages
+  ignore_errors: True
+  yum: >
+    name=*
+    state=latest
+    update_cache=yes

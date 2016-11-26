@@ -1,7 +1,0 @@
----
-- name: set root mail-address
-  lineinfile: >
-    dest=/etc/aliases
-    state=present
-    regexp='^#? ?root'
-    line='root:\t{{common_mail_address}}'

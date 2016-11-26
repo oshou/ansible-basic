@@ -1,3 +1,0 @@
----
-- name: restart_bind
-  service: name=named state=restarted

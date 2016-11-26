@@ -1,0 +1,23 @@
+---
+- name: install group packages
+  ignore_errors: true
+  yum:
+    name="@{{item.name}}"
+    state=present
+  with_items:
+    - "{{common_group_packages}}"
+
+- name: install packages
+  ignore_errors: true
+  yum:
+    name="{{item.name}}"
+    state=present
+  with_items:
+    - "{{common_packages}}"
+
+- name: update all packages
+  ignore_errors: true
+  yum: >
+    name=*
+    state=latest
+    update_cache=yes

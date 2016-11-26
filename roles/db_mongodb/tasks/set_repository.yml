@@ -1,0 +1,7 @@
+---
+- name: set mondodb.repository
+  template: >
+    backup=yes
+    src=mongodb.repo
+    dest=/etc/yum.repos.d/mondodb.repo
+    owner=root

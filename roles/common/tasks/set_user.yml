@@ -1,34 +1,22 @@
 ---
-# Change admin user password
-# //pretask: create hash password (exec -> python -c 'import crypt; print crypt.crypt("/*password*/", "$1$SomeSalt$")'
-- name: change admin password
+- name: change root password
   user: >
-    name={{common_user.admin.name}}
-    update_password=always
-    password={{common_user.admin.hash_password}}
+    name=root
+    password={{common_user.root.password | password_hash('sha512')}}
 
-- name: set PAM su
-  lineinfile: >
-    dest=/etc/pam.d/su
-    state=present
-    regexp='^#? ?auth.*so use_uid$'
-    line='auth  required  pam_wheel.so use_uid'
-
-# //pretask: create hash password (exec -> python -c 'import crypt; print crypt.crypt("/*password*/", "$1$SomeSalt$")'
-- name: create wheel-group user
+- name: create admin-user(wheel group)
   user: >
     name={{item.name}}
     groups="wheel"
-    update_password=always
-    password={{item.hash_password}}
+    password={{item.password | password_hash('sha512')}}
   with_items:
     - "{{common_user.ansible}}"
     - "{{common_user.wheel}}"
 
-- name: set publickey authentication
-  authorized_key: >
-    user={{item.name}}
-    key={{lookup('file','~/.ssh/id_rsa.pub')}}
+- name: create general-user(non-wheel group)
+  user: >
+    name={{item.name}}
+    password={{item.password | password_hash('sha512')}}
   with_items:
     - "{{common_user.ansible}}"
     - "{{common_user.wheel}}"

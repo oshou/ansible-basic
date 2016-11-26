@@ -1,0 +1,7 @@
+---
+- name: set logwatch
+  lineinfile: >
+    dest=/usr/share/logwatch/default.conf/logwatch.conf
+    state=present
+    regexp='^#? ?MailTo'
+    line='MailTo = {{common_logwatch_mail_address}}'

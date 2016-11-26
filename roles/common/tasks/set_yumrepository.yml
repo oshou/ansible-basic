@@ -1,0 +1,6 @@
+---
+- name: set yum repository
+  template: >
+    backup=yes
+    src=yumrepo_V6_CentOS-Base.repo.j2
+    dest=/etc/yum.repos.d/CentOS-Base.repo

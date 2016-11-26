@@ -1,0 +1,6 @@
+---
+- name: set hosts
+  template: >
+    backup=yes
+    src=hosts.j2
+    dest=/etc/hosts

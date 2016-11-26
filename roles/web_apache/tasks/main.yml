@@ -4,6 +4,7 @@
 
 - name: set httpd.conf
   lineinfile: >
+    backup=yes
     dest=/etc/httpd/conf/httpd.conf
     state=present
     regexp={{item.regexp}}

@@ -2,5 +2,6 @@
 - name: set iptables
   notify: restart_iptables
   template: >
+    backup=yes
     src=iptables.j2
     dest=/etc/sysconfig/iptables

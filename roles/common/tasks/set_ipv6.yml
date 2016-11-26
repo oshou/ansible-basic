@@ -1,0 +1,6 @@
+---
+- name: set ipv6
+  template: >
+    backup=yes
+    src=disable-ipv6.conf.j2
+    dest=/etc/modprobe.d/disable-ipv6.conf

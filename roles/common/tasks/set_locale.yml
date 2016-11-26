@@ -1,6 +1,7 @@
 ---
 - name: set locale
   lineinfile: >
+    backup=yes
     dest=/etc/sysconfig/i18n
     state=present
     regexp='{{item.regexp}}'
@@ -9,4 +10,3 @@
     - {regexp: '^#? ?LANG', line: 'LANG="{{common_locale.LANG}}"'}
     - {regexp: '^#? ?SUPPORTED', line: 'SUPPORTED="{{common_locale.SUPPORTED}}"'}
     - {regexp: '^#? ?SYSFONT', line: 'SYSFONT="{{common_locale.SYSFONT}}"'}
-  notify: restart_ntpd

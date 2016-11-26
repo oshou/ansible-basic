@@ -1,0 +1,6 @@
+---
+- name: set gai.conf
+  template: >
+    backup=yes
+    src=gai.conf.j2
+    dest=/etc/gai.conf

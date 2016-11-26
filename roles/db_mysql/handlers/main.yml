@@ -1,0 +1,3 @@
+---
+name: restart_mysqld
+service: name=mysqld state=restarted sleep=5

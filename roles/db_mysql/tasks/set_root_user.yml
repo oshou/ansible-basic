@@ -1,0 +1,13 @@
+---
+- name: set MySQL root user & password
+  mysql_user:
+    name=root
+    host="{{item}}"
+    password="{{mysql_root_password}}"
+    priv=*.*:ALL,GRANT
+    state=present
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+  ignore_errors: True

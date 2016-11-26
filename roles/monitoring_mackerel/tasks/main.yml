@@ -1,0 +1,19 @@
+---
+- name: set mackerel-repository
+  shell: curl -fsSL https://mackerel.io/assets/files/scripts/setup-yum.sh | sh
+
+- name: install mackerel-agent
+  yum: name={{item.name}} state=installed enablerepo=mackerel
+  with_items: "{{mackerel_packages}}"
+
+- name: copy mackerel-agent.conf
+  template: >
+    backup=yes
+    src=mackerel-agent.conf.j2
+    dest="{{mackerel_config_file_path}}"
+    owner=root
+    group=root
+    mode=0666
+
+- name: service start & enabled
+  service: name=mackerel-agent state=started enabled=yes

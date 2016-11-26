@@ -2,7 +2,7 @@
 ServerRoot {{apache_server_root}}
 PidFile {{apache_pid_file}}
 
-# Global | Connection
+# Global @Connection
 Timeout {{apache_timeout}}
 KeepAlive {{apache_keepalive}}
 KeepAliveTimeout {{apache_keepalive_timeout}}
@@ -11,7 +11,7 @@ Listen "{{apache_listen_ip}}:{{apache_listen_port}}"
 User {{apache_user}}
 Group {{apache_group}}
 
-# Global | prefork
+# Global @prefork
 <IfModule prefork.c>
 StartServers    {{apache_prefork_start_servers}}
 MinSpareServers {{apache_prefork_min_spare_servers}}
@@ -20,7 +20,7 @@ MaxClients      {{apache_prefork_max_clients}}
 MaxRequestsPerChild  {{apache_prefork_max_requests_per_child}}
 </IfModule>
 
-# Global | worker
+# Global @worker
 <IfModule worker.c>
 StartServers    {{apache_worker_start_servers}}
 MaxClients      {{apache_worker_max_clients}}

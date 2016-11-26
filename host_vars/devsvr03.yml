@@ -1,0 +1,17 @@
+---
+# Replication
+mysql_replication_enabled: "yes"
+mysql_server_id: "1"
+mysql_replication_role: "master"
+mysql_replication_master: ""
+mysql_replication_slave: ""
+mysql_replication_user:
+  name: "mysqlrep"
+  password: "mysqlrep"
+  priv: "*.*:ALL"
+mysql_bin_log_index: "/var/lib/mysql/mysql-bin.index"
+mysql_bin_log_file: "/var/lib/mysql/mysql-bin.000002"
+mysql_bin_log_position: 120
+mysql_max_binlog_size: "100M"
+mysql_binlog_format: "MIXED"
+mysql_expire_logs_days: "10"

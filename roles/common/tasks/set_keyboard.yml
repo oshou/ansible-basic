@@ -1,0 +1,13 @@
+---
+- name: set keyboard
+  lineinfile: >
+    backup=yes
+    dest=/etc/sysconfig/keyboard
+    state=present
+    regexp="{{item.regexp}}"
+    line="{{item.line}}"
+  with_items:
+    - {regexp: '^#? ?KEYTABLE', line: 'KEYTABLE="{{common_keyboard.KEYTABLE}}"'}
+    - {regexp: '^#? ?MODEL', line: 'MODEL="{{common_keyboard.MODEL}}"'}
+    - {regexp: '^#? ?LAYOUT', line: 'LAYOUT="{{common_keyboard.LAYOUT}}"'}
+    - {regexp: '^#? ?KEYBOARDTYPE', line: 'KEYBOARDTYPE="{{common_keyboard.KEYBOARDTYPE}}"'}

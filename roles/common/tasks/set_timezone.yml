@@ -1,7 +1,6 @@
 ---
 - name: set local timezone
-  file: >
+  copy: >
+    backup=yes
     src=/usr/share/zoneinfo/{{common_zoneinfo}}
     dest=/etc/localtime
-    state=link
-    force=yes

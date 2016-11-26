@@ -1,0 +1,16 @@
+---
+- name: set su
+  lineinfile: >
+    backup=yes
+    dest=/etc/pam.d/su
+    state=present
+    regexp='^#? ?auth.*so use_uid$'
+    line='auth  required  pam_wheel.so use_uid'
+
+- name: set sudo
+  lineinfile: >
+    backup=yes
+    dest=/etc/sudoers
+    state=present
+    regexp='^#? ?%wheel'
+    line='%wheel ALL=(ALL) NOPASSWD: ALL'

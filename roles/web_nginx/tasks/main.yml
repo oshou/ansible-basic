@@ -1,6 +1,7 @@
 ---
 - name: enable nginx repo
   template: >
+    backup=yes
     src=nginx.repo.j2
     dest=/etc/yum.repos.d/nginx.repo
     owner=root
@@ -12,6 +13,7 @@
 
 - name: set nginx.conf
   template: >
+    backup=yes
     src=nginx.conf.j2
     dest="{{nginx_config_file_path}}"
     owner=root
@@ -21,7 +23,8 @@
 
 - name: service httpd stop & diabled
   service: name=httpd state=stopped enabled=no
-  ignore_errors: True
+  ignore_errors: true
 
 - name: service start & enabled
-  service: name=mysqld state=started enabled=yes
+  service: name=nginx state=started enabled=yes
+  ignore_errors: true

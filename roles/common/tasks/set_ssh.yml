@@ -1,6 +1,7 @@
 ---
 - name: set sshd
   lineinfile:
+    backup=yes
     dest=/etc/ssh/sshd_config
     state=present
     regexp='{{item.regexp}}'
@@ -9,9 +10,11 @@
     - {regexp: '^#? ?Port ', line: 'Port {{common_ssh_port}}'}
     - {regexp: '^#? ?Protocol ', line: 'Protocol 2'}
     - {regexp: '^#? ?PermitRootLogin ', line: 'PermitRootLogin no'}
-    - {regexp: '^#? ?PubkeyAuthentication ', line: 'PubkeyAuthentication yes'}
+    # - {regexp: '^#? ?PubkeyAuthentication ', line: 'PubkeyAuthentication yes'}
     - {regexp: '^#? ?PermitEmptyPasswords ', line: 'PermitEmptyPasswords no'}
-    - {regexp: '^#? ?PasswordAuthentication ', line: 'PasswordAuthentication no'}
-    - {regexp: '^#? ?ChallengeResponseAuthentication ', line: 'ChallengeResponseAuthentication no'}
-    - {regexp: '^#? ?GSSAPIAuthentication ', line: 'GSSAPIAuthentication no'}
-  notify: restart_sshd
+    - {regexp: '^#? ?PasswordAuthentication ', line: 'PasswordAuthentication yes'}
+    # - {regexp: '^#? ?ChallengeResponseAuthentication ', line: 'ChallengeResponseAuthentication no'}
+    # - {regexp: '^#? ?GSSAPIAuthentication ', line: 'GSSAPIAuthentication no'}
+
+- name: restart_sshd
+  command: service sshd restart

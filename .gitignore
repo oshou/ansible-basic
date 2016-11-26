@@ -1,0 +1,5 @@
+group_vars/
+hostvars/
+inventory
+site.retry
+.git

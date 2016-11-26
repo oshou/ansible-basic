@@ -1,10 +1,15 @@
 ---
-- name: set ntpd
+- name: cron ntpdate schedule
+  cron: >
+    name="ntpdate"
+    user="root"
+    minute=0
+    hour=1
+    job="/usr/sbin/ntpdate -s -b {{common_ntp_server}}"
+
+- name: startup ntpdate
   lineinfile: >
-    dest=/etc/ntp.conf
+    dest='/etc/rc.local'
     state=present
-    regexp='{{item.regexp}}'
-    line='{{item.line}}'
-  with_items:
-    - {regexp: '^#? ?server ', line: 'server {{common_ntpserver}} iburst'}
-  notify: restart_ntpd
+    regexp='^#? ?/usr/sbin/ntpdate'
+    line='/usr/sbin/ntpdate -s -b {{common_ntp_server}}'

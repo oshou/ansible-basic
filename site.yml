@@ -1,24 +1,25 @@
 ---
 - name: common
-  # 対象hosts
-  hosts: servers
   # sudo実行の有無
   become: yes
-  # 参照設定値(group_vars->host_varsの順に記述)
+  # 対象クライアント
+  hosts:
+    - all
+  # 参照パラメータ(優先順位はhostvars>group_vars)
   vars_files:
     - group_vars/pretask_ansible.yml
-    - group_vars/common.yml
-    # - group_vars/dns_bind.yml
+    # - group_vars/common.yml
+    # - group_vars/db_mongodb.yml
     # - group_vars/web_apache.yml
     # - group_vars/web_nginx.yml
-    # - group_vars/app_phpfpm.yml
-    # - group_vars/db_mysql.yml
-    - host_vars/{{ansible_hostname}}.yml
-  # 実行タスク等
+    # - group_vars/db_mysql.ym
+    - group_vars/monitoring_mackerel.yml
+    # - host_vars/{{ansible_hostname}}.yml
+  # 操作手順
   roles:
-    - common
-    # - dns_bind
+    # - common
+    # - db_mongodb
     # - web_apache
     # - web_nginx
-    # - app_phpfpm
     # - db_mysql
+    - monitoring_mackerel

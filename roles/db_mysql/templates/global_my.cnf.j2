@@ -1,0 +1,211 @@
+# ------------------------------------------------------------------
+# Base
+# ------------------------------------------------------------------
+[mysqld]
+# // プロダクトディレクトリのパス
+datadir={{mysql_datadir}}
+# // PIDファイルのパス
+pid-file={{mysql_pid_file_path}}
+# // ローカル接続時に使用するソケットファイルのパス
+socket={{mysql_socket}}
+# // Listenするポート番号
+port={{mysql_port}}
+# // MySQLサーバーの実行ユーザー
+user={{mysql_user}}
+# // デフォルトのストレージエンジン
+default-storage-engine={{mysql_default_storage_engine}}
+# // デフォルトのトランザクション分離レベル(serializable/repeatable-read/read-commited/read-uncommited)
+transaction-isolation={{mysql_transaction_isolation}}
+# // シンボリックリンクを使用してデータディレクトリ外のデータ参照をするか
+symbolic-links=0
+
+# // InnoDBテーブルのデータ領域の保管場所、サイズ上限
+innodb_data_file_path={{mysql_innodb_data_file_path}}
+
+{% if mysql_innodb_file_per_table %}
+# // InnoDBテーブル毎に個別のデータ領域ファイルを作成するか
+innodb_file_per_table
+{% endif %}
+
+{% if mysql_skip_external_locking %}
+# // 外部ロック、システムロックを行うか(MyIsamのみ対象)
+skip-external-locking
+{% endif %}
+
+# ------------------------------------------------------------------
+# Character Setting
+# ------------------------------------------------------------------
+# // デフォルトの文字コード
+character-set-server={{mysql_character_set_server}}
+# // サーバーのデフォルト照合順序
+# // * 同じ文字(a,A,Ａ,ａ)等をソートの際にどのように扱うかを指定
+collation-server={{mysql_collation_server}}
+# // クライアントとサーバーで文字コード不一致の場合は化けるので、
+# // サーバー側で指定された文字コードを使う
+skip-character-set-client-handshake
+
+# ------------------------------------------------------------------
+# Logging
+# ------------------------------------------------------------------
+# // 一般クエリログとスロークエリログの出力方法の指定(FILE/TABLE/NONE)
+log_output={{mysql_log_output}}
+# // 警告もログ出力に含むか(警告は接続中断した情報等も含む)
+log_warnings={{mysql_log_warnings}}
+
+{% if mysql_general_log_enabled %}
+# // 一般クエリログの有効化
+general_log=1
+# // 一般クエリログのファイルパス
+general_log_file={{mysql_general_log_file_path}}
+{% endif %}
+
+# // エラーログのログファイルパス
+log_error={{mysql_error_log_file_path}}
+
+{% if mysql_slow_query_log_enabled %}
+# // スロークエリログの有効化
+slow_query_log=1
+# // スロークエリログのログファイルパス
+slow_query_log_file={{mysql_slow_query_log_file_path}}
+# // 指定時間より長いクエリをスロークエリとして収集する
+long_query_time={{mysql_slow_query_time}}
+{% endif %}
+
+# ------------------------------------------------------------------
+# Network
+# ------------------------------------------------------------------
+# // MySQLサーバーへのクライアント最大同時接続数
+# // * "Too Many connections"エラーが発生する場合は値を増やす
+# // * SHOW STATUS LIKE 'Max_used_connections'(mysqld起動から今までの最大同時接続数)を参考にする
+max_connections={{mysql_max_connections}}
+# // 各ユーザー毎のクライアント最大同時接続数
+max_user_connections={{mysql_max_user_connections}}
+# // コネクション切断後もキャッシュしておくスレッドの数
+# // * 再接続時にキャッシュ情報を再利用するため、新規スレッド作成時の負荷を減らせる
+# // * 推奨：max_connections/3
+thread_cache_size={{mysql_thread_cache_size}}
+# // クライアントからの常時接続のタイムアウト時間
+wait_timeout={{mysql_wait_timeout}}
+{% if mysql_skip_name_resolve %}
+# // クライアントからの接続時にクライアントのIPアドレス逆引きを行わない
+skip-name-resolve
+{% endif %}
+
+# ------------------------------------------------------------------
+# Memory
+# ------------------------------------------------------------------
+# 合計メモリ容量 = グローバルメモリ領域 + (max_connections x 各スレッド専用メモリ領域)
+#
+# [グローバルメモリ領域(MySQLインスタンス全体で共有)]
+# // * MySQLデーモン全体で1つだけ確保され共有される
+
+# // 各テーブルファイルを開いた際のポインタ情報をキャッシュするメモリ領域のサイズ
+# // * 推奨： maxconnections x テーブル数
+table_open_cache={{mysql_table_open_cache}}
+
+# // サーバーが再利用のためにSQL文実行結果をキャッシュするメモリ領域のサイズ
+# // * 推奨：32M
+# // * SHOW STATUS LIKE 'Qcache_hits'や'Qcache_inserts'が少ない場合は減らす。
+# // * クエリの再利用が少なくシンプルかつ軽量の参照処理のみの場合は、むしろ0にする方がパフォーマンスが上がる場合有り。
+# // * 0でquery_cacheを無効化
+query_cache_size={{mysql_query_cache_size}}
+# // 各テーブルファイルを開いた際のポインタ情報をキャッシュするメモリ領域のサイズ
+# // * 推奨： maxconnections x テーブ
+# // * 推奨：8M-64M
+# // * 実行途中のトランザクションの更新データはここで一時保管されるため、1トランザクション内の更新データサイズが大きくないか要確認
+innodb_log_buffer_size={{mysql_innodb_log_buffer_size}}
+# // InnoDBの更新ログを記録する領域。
+# // * 推奨：innodb_buffer_pool_sizeの25%-100%
+# // * innodb_log_fileは満杯時にディスク書き込みを行い速度低下が起きるので大きめに割り当てる
+innodb_log_file_size={{mysql_innodb_log_file_size}}
+
+# // MyISAMのキーをキャッシュするメモリ領域のサイズ
+# // * 推奨：空きメモリの25%だが、SHOW VARIABLES LIKE '%Key%';でKey_reads/Key_reads_requestsが1%以下となるよう調整できれば問題無し
+key_buffer_size={{mysql_myisam_key_buffer_size}}
+
+
+# [スレッド専用メモリ領域(各スレッド単位で利用)]
+# // * 各スレッド(=コネクション)単位でそれぞれ確保され、各スレッドが専有する。
+# // * 単一スレッドバッファの割り当て域なのでむやみに大きくしない
+#
+# // 未コミットのトランザクション情報をキャッシュするメモリ領域のサイズ
+# // * 大規模なトランザクション処理がある場合は大きめに値を取る
+binlog_cache_size={{mysql_binlog_cache_size}}
+# // ソート処理(ORDER BY,GROUP BY等)に使用するメモリ領域のサイズ
+sort_buffer_size={{mysql_sort_buffer_size}}
+# // インデックスを使わないテーブル結合に使用するメモリ領域のサイズ
+join_buffer_size={{mysql_join_buffer_size}}
+# // インデックスを使わないテーブルスキャンに使用するメモリ領域のサイズ
+read_buffer_size={{mysql_read_buffer_size}}
+# // ソート後のレコード読み取りに使用するメモリ領域のサイズ
+read_rnd_buffer_size={{mysql_read_rnd_buffer_size}}
+# // ユーザープロセスとサーバスレッド間のSQL問い合わせ、応答のやりとりに使用される領域のサイズ
+max_allowed_packet={{mysql_max_allowed_packet}}
+# // スタック領域と呼ばれるスタック固有のメモリ領域のサイズ
+thread_stack={{mysql_thread_stack}}
+
+
+
+# ------------------------------------------------------------------
+# Replication
+# ------------------------------------------------------------------
+{% if mysql_replication_enabled %}
+# // レプリケーション用のサーバーID
+server-id={{mysql_server_id}}
+
+{% if mysql_replication_role == 'master' %}
+# // バイナリログ(更新系SQLの実行記録)のログファイルパス
+log-bin={{mysql_bin_log_file_path}}
+# // バイナリログのインデックスファイルのパス
+log-bin-index={{mysql_bin_log_index}}
+# // バイナリログの保管日数。経過したら自動削除。
+expire_logs_days={{mysql_expire_logs_days}}
+# // バイナリログの最大サイズ
+max_binlog_size={{mysql_max_binlog_size}}
+# // バイナリログのフォーマット(MIXED/ROW/STATEMENT)
+binlog_format={{mysql_binlog_format}}
+{% endif %}
+
+{% if mysql_replication_role == 'slave' %}
+# // レプリケーション時にMasterへの書き込み防止
+read_only
+# // リレーログ(Masterからの情報を元にスレーブ側実行のために作成されるバイナリログ)のログファイルパス
+relay-log=relay-bin
+# // リレーログのインデックスファイルのパス
+relay-log-index=relay-bin.index
+# // slave側で更新時のバイナリログへの書き込みを行う
+log-slave-updates
+{% endif %}
+
+{% endif %}
+
+# ------------------------------------------------------------------
+# mysqldump
+# ------------------------------------------------------------------
+[mysqldump]
+# // ダンプ時にテーブルを1行ずつ読み込んでダンプする。
+# // データ量の大きなテーブルを全レコード一括ダンプしてメモリ圧迫するのを防ぐ。
+quick
+# // ユーザープロセスとサーバスレッド間のSQL問い合わせ、応答に使用される領域のサイズ
+max_allowed_packet={{mysql_mysqldump_max_allowed_packet}}
+
+# ------------------------------------------------------------------
+# mysql console
+# ------------------------------------------------------------------
+[mysql]
+# // デフォルトの文字コード設定
+default-character-set=utf8
+# // コマンドの自動補完の無効化(メモリを食うため節約)
+no-auto-rehash
+# // 警告が発生時に表示する
+show-warnings
+# // MySQLクライアントのプロンプト
+prompt=\u@\h:\d\_\R:\m:\\s>
+# // paging機能の支援
+pager="less -n -i -F -X -E"
+
+# ------------------------------------------------------------------
+# mysqld_safe
+# ------------------------------------------------------------------
+[mysqld_safe]
+pid-file={{mysql_pid_file_path}}

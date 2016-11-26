@@ -1,9 +1,20 @@
 ---
-- name: service enabled
-  service: name={{item}} state=started enabled=yes
-  with_items: "{{common_enable_services}}"
+- name: service start
+  ignore_errors: true
+  command: service "{{item.name}}" start
+  with_items: '{{common_enable_services}}'
 
-- name: service disabled
-  service: name={{item}} state=stopped enabled=no
-  ignore_errors: True
-  with_items: "{{common_disable_services}}"
+- name: service enable
+  ignore_errors: true
+  command: chkconfig "{{item.name}}" on
+  with_items: '{{common_enable_services}}'
+
+- name: service stop
+  ignore_errors: true
+  command: service "{{item.name}}" stop
+  with_items: '{{common_disable_services}}'
+
+- name: service disable
+  ignore_errors: true
+  command: chkconfig "{{item.name}}" off
+  with_items: '{{common_disable_services}}'

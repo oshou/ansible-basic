@@ -4,22 +4,24 @@
   become: yes
   # 対象クライアント
   hosts:
-    - all
+    - admin
   # 参照パラメータ(優先順位はhostvars>group_vars)
   vars_files:
     - group_vars/pretask_ansible.yml
+    - group_vars/test_serverspec.yml
     # - group_vars/common.yml
     # - group_vars/db_mongodb.yml
     # - group_vars/web_apache.yml
     # - group_vars/web_nginx.yml
     # - group_vars/db_mysql.ym
-    - group_vars/monitoring_mackerel.yml
+    # - group_vars/monitoring_mackerel.yml
     # - host_vars/{{ansible_hostname}}.yml
   # 操作手順
   roles:
     # - common
+    - test_serverspec
     # - db_mongodb
     # - web_apache
     # - web_nginx
     # - db_mysql
-    - monitoring_mackerel
+    # - monitoring_mackerel

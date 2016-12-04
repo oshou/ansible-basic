@@ -1,0 +1,42 @@
+---
+- name: install Prerequisite packages
+  yum: name={{item.name}}
+  with_items: "{{serverspec_prerequisite_packages}}"
+
+- name: rbenv git clone
+  git: >
+    repo=git://github.com/sstephenson/rbenv.git
+    dest=/usr/local/src/rbenv
+
+- name: ruby-build git clone
+  git: >
+    repo=git://github.com/sstephenson/ruby-build.git
+    dest=/usr/local/src/rbenv/plugins/ruby-build
+
+- name: export PATH
+  lineinfile: >
+     backup=yes
+     dest=/etc/bashrc
+     state=present
+     regexp={{item.regexp}}
+     line={{item.line}}
+     insertafter='EOF'
+  with_items:
+    - {regexp: '^#? ?export PATH',line: 'export PATH=$PATH:{{serverspec_rbenv_install_path}}/bin:{{serverspec_rbenv_install_path}}/plugins/ruby-build/bin'}
+
+- name: source ~/.bashrc
+  shell: . .bashrc
+
+- shell: echo $PATH
+  register: pathmsg
+
+- debug: var=pathmsg
+
+- name: Ruby install
+  shell: rbenv install -v {{serverspec_ruby_version}}
+
+- name: rbenv rehash
+  shell: rbenv rehash
+
+- name: Ruby version select
+  shell: rbenv global {{serverspec_ruby_version}}

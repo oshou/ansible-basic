@@ -1,0 +1,69 @@
+---
+- name: create datadir if it does not exist
+  file: >
+    backup=yes
+    path="{{mysql_datadir}}"
+    state=directory
+    owner=mysql
+    group=mysql
+    mode=0755
+
+# set slow query log
+- name: create slow query log file (if enabled)
+  shell: "touch {{mysql_slow_query_log_file_path}} creates={{mysql_slow_query_log_file_path}}"
+  when: mysql_slow_query_log_enabled
+
+- name: set ownership on slow query log file (if enabled)
+  file: >
+    backup=yes
+    path="{{mysql_slow_query_log_file_path}}"
+    state=file
+    owner=mysql
+    group=mysql
+    mode=0640
+  when: mysql_slow_query_log_enabled
+
+# set error log
+- name: create error log file (if enabled)
+  shell: "touch {{mysql_error_log_file_path}} creates={{mysql_error_log_file_path}}"
+  when: mysql_log_output == "" and mysql_error_log_file_path != ""
+
+- name: set ownership on error log file (if enabled)
+  file: >
+    backup=yes
+    path="{{mysql_error_log_file_path}}"
+    state=file
+    owner=mysql
+    group=mysql
+    mode=0640
+  when: mysql_log_output == "" and mysql_error_log_file_path != ""
+
+- name: copy global my.cnf
+  template: >
+    backup=yes
+    src=global_my.cnf.j2
+    dest="{{mysql_global_config}}"
+    owner=root
+    group=root
+    mode=0644
+  notify: restart_mysqld
+
+- name: copy user my.cnf
+  template: >
+    backup=yes
+    src=user_my.cnf.j2
+    dest="{{mysql_user_config}}"
+    owner=root
+    group=root
+    mode=0600
+
+- name: delete anonymous mysql-user
+  mysql_user:
+    name=""
+    host_all=yes
+    state=absent
+
+- name: remove test database
+  mysql_db: >
+    name="test"
+    state=absent

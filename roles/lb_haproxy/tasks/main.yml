@@ -1,0 +1,7 @@
+---
+- include: set_repository.yml
+- include: install_packages.yml
+# - include: set_config.yml
+# - include: set_root_user.yml
+# - include: set_databases.yml
+# - include: set_replication.yml

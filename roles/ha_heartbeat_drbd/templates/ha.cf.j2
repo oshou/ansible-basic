@@ -1,0 +1,40 @@
+# Log
+# // Logファシリティ(相手先と一致必須)
+logfacility   {{heartbeat_logfacility}}
+# // Logファイル出力場所。指定するとsyslogは使用しない。
+logfile       {{heartbeat_log}}
+
+# Time
+# // Heartbeat監視間隔(s)
+keepalive     {{heartbeat_keepalive}}
+# // ホスト停止と判断するまでの時間(s)
+deadtime      {{heartbeat_deadtime}}
+# // ホスト停止という警告を出力するまでの時間(s)
+warntime      {{heartbeat_warntime}}
+# // 起動時にHeartbeat監視を行うまでの時間(s)
+initdead      {{heartbeat_initdead}}
+
+# Heartbeat
+# // Heartbeat監視を行う際のUDPポート番号
+udpport       {{heartbeat_udpport}}
+# // Heartbeat監視を元インターフェース名と相手先IPアドレス
+ucast {{heartbeat_src_interface}} {{heartbeat_dst_ip}}
+
+# Failback
+# // 障害復旧した稼動系を自動でアクティブ化させるか
+auto_failback {{heartbeat_auto_failback}}
+
+# Watchdog
+# // watchdog(一定時間応答が無い場合にOS再起動を行う機能)用のデバイス
+watchdog      {{heartbeat_watchdog}}
+
+# Node
+# // 稼動系と待機系のサーバのホスト名を指定(uname -nの出力結果を指定)
+
+# Ping
+ping          {{heartbeat_ping_ip}}
+
+# 監視詳細
+# // 監視時の実行コマンドと実行ユーザを指定 ※ping指定した場合はipfail
+respawn {{heartbeat_monitor_user}}  {{heartbeat_monitor_command}}
+apiauth {{heartbeat_apiauth_command}} gid={{heartbeat_apiauth_gid}} uid={{heartbeat_apiauth_uid}}

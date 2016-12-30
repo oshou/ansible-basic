@@ -1,0 +1,39 @@
+---
+- name: install Prerequisite packages
+  yum: name={{item.name}}
+  with_items: "{{serverspec_prerequisite_packages}}"
+
+- name: rbenv git clone (Ruby version management system)
+  git: >
+    repo=git://github.com/sstephenson/rbenv.git
+    dest=/usr/local/rbenv
+
+- name: ruby-build git clone (Ruby version management system)
+  git: >
+    repo=git://github.com/sstephenson/ruby-build.git
+    dest=/usr/local/rbenv/plugins/ruby-build
+
+- name: export PATH for rbenv
+  lineinfile: >
+     backup=yes
+     create=yes
+     dest=/etc/profile.d/path_rbenv.sh
+     state=present
+     regexp={{item.regexp}}
+     line={{item.line}}
+  with_items:
+    - {regexp: '^#? ?export PATH',line: 'export PATH=$PATH:{{serverspec_rbenv_install_path}}/bin:{{serverspec_rbenv_install_path}}/plugins/ruby-build/bin'}
+
+- name: check ruby installed version
+  shell: /bin/bash -lc "rbenv versions"
+  register: ruby_installed_version
+  ignore_errors: true
+
+- debug: var=ruby_installed_version.stdout_lines.count("{{serverspec_ruby_version}}")
+
+- name: Ruby install
+  shell: /bin/bash -lc "rbenv install {{serverspec_ruby_version}}"
+  when: ruby_installed_version.stdout_lines.count("{{serverspec_ruby_version}}") <= 0
+
+- name: Ruby version select
+  shell: /bin/bash -lc "rbenv global {{serverspec_ruby_version}}"

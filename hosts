@@ -1,0 +1,33 @@
+# ansible_ssh_port: "9822"
+# ansible_ssh_user: "ansible"
+# ansible_ssh_pass: "ansible"
+#
+# 初期セットアップ時
+# ansible_ssh_port: "22"
+# ansible_ssh_user: "root"
+# ansible_ssh_password: "ut@0odpp8GlcD"
+
+[web]
+devsvr01:9822
+devsvr02:9822
+devsvr04:9822
+devsvr05:9822
+
+[db]
+devsvr03:9822
+devsvr06:9822
+
+[mongodb]
+devsvr02:9822
+devsvr04:9822
+devsvr06:9822
+
+[projectA]
+devsvr01
+devsvr02
+devsvr03
+
+[projectB]
+devsvr04
+devsvr05
+devsvr06

@@ -1,0 +1,4 @@
+---
+- include: set_repository.yml
+- include: install_packages.yml
+- include: set_config.yml

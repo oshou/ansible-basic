@@ -1,0 +1,24 @@
+---
+- name: copy ha.cf
+  template: >
+    src=ha.cf.j2
+    dest="{{heartbeat_config_hacf}}"
+    owner=root
+    group=root
+    mode=0644
+
+- name: copy haresources
+  template: >
+    src=haresources.j2
+    dest="{{heartbeat_config_haresources}}"
+    owner=root
+    group=root
+    mode=0644
+
+- name: copy authkeys
+  template: >
+    src=authkeys.j2
+    dest="{{heartbeat_config_authkeys}}"
+    owner=root
+    group=root
+    mode=0644

@@ -1,0 +1,28 @@
+---
+- name: import gpg key
+  rpm_key: >
+    key=https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+    state=present
+
+- name: set elrepo repository (el7)
+  yum: >
+    name=http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+    state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: set elrepo repository (el6)
+  yum: >
+    name=http://www.elrepo.org/elrepo-release-6-6.el6.elrepo.noarch.rpm
+    state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: set elrepo repository (el5)
+  yum: >
+    name=http://www.elrepo.org/elrepo-release-5-5.el5.elrepo.noarch.rpm
+    state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "5"
+
+- name: set epel-release
+  yum: >
+    name=epel-release
+    state=installed

@@ -1,0 +1,9 @@
+# Setting iptables
+- name: set iptables.sh
+  template: >
+    src=iptables.sh.j2
+    dest=/root/iptables.sh
+    mode=755
+
+- name: execute iptables.sh
+  shell: /root/iptables.sh

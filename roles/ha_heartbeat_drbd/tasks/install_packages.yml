@@ -1,0 +1,13 @@
+---
+- name: install drbd
+  yum: >
+    name="{{item}}"
+    state=installed
+  with_items:
+    - drbd
+    - kmod-drbd84
+
+- name: install heartbeat
+  yum: >
+    name=heartbeat
+    state=installed

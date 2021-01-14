@@ -27,7 +27,7 @@ GEM
     net-telnet (0.1.1)
     nori (2.6.0)
     oj (2.18.0)
-    rake (11.3.0)
+    rake (12.3.3)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
